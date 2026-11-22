@@ -32,8 +32,14 @@ function body(p) {
 }
 export default {
   fetch(request) {
+    const url = new URL(request.url);
+    // One canonical address: www.codvilo.com -> codvilo.com (permanent).
+    if (url.hostname === 'www.codvilo.com') {
+      url.hostname = 'codvilo.com';
+      return Response.redirect(url.toString(), 301);
+    }
     if (request.method !== 'GET' && request.method !== 'HEAD') return new Response('Method not allowed', { status: 405 });
-    let p = decodeURIComponent(new URL(request.url).pathname);
+    let p = decodeURIComponent(url.pathname);
     if (p.endsWith('/')) p += 'index.html';
     else if (!FILES[p] && FILES[p + '.html']) p += '.html';
     else if (!FILES[p] && FILES[p + '/index.html']) p += '/index.html';
