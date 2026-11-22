@@ -1,0 +1,83 @@
+---
+// Illustrations for the four process cards. Animated via src/styles/process.css
+// (and a small cycle script in main.js for the Grow dial).
+import '../styles/process.css';
+const { step } = Astro.props;
+const I = {
+  search: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4-4"/>',
+  cart: '<circle cx="9" cy="20" r="1.2"/><circle cx="18" cy="20" r="1.2"/><path d="M3 4h2l2.4 11h11l2-8H6.2"/>',
+  code: '<path d="m8 7-5 5 5 5M16 7l5 5-5 5"/>',
+  cloud: '<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19 10a4 4 0 0 1-1 8z"/>',
+  layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+  up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  users: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 4a3 3 0 0 1 0 6M21 20a6 6 0 0 0-4-5.6"/>',
+  bars: '<path d="M4 20h16M7 17V10M12 17V6M17 17v-5"/>',
+  sound: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
+};
+const ic = (n) => `<svg viewBox="0 0 24 24" aria-hidden="true">${I[n]}</svg>`;
+// Grow dial: 5 segments of a half ring (180°), centre (130,175).
+const seg = (i, n = 5, r1 = 70, r2 = 128, cx = 130, cy = 178, gap = 3) => {
+  const a0 = Math.PI + (i * Math.PI) / n + (gap * Math.PI) / 180;
+  const a1 = Math.PI + ((i + 1) * Math.PI) / n - (gap * Math.PI) / 180;
+  const p = (r, a) => `${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`;
+  return `M${p(r2, a0)} A${r2} ${r2} 0 0 1 ${p(r2, a1)} L${p(r1, a1)} A${r1} ${r1} 0 0 0 ${p(r1, a0)} Z`;
+};
+const mid = (i, n = 5, r = 99, cx = 130, cy = 178) => {
+  const a = Math.PI + ((i + 0.5) * Math.PI) / n;
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+};
+const growIcons = ['sound', 'up', 'users', 'bars', 'up'];
+---
+<div class={`pa pa--${step}`} aria-hidden="true" data-pa={step}>
+  {step === 1 && (
+    <Fragment>
+      <svg class="pa1-arc" viewBox="0 0 260 200">
+        <defs><linearGradient id="pa1g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f82ff"/><stop offset="1" stop-color="#4a3fd6" stop-opacity="0.2"/></linearGradient></defs>
+        <path class="pa1-arc__glow" d="M20 200 A110 110 0 0 1 240 200" />
+        <path class="pa1-arc__line" d="M20 200 A110 110 0 0 1 240 200" pathLength="100" />
+      </svg>
+      <div class="pa1-brief">
+        <span class="pa1-icon" set:html={ic('search')} />
+        <span class="pa1-text" data-type="Your goals, distilled into one brief.">Your goals, distilled into one brief.</span>
+      </div>
+    </Fragment>
+  )}
+
+  {step === 2 && (
+    <div class="pa2-stack">
+      <i class="pane p4"></i><i class="pane p3"></i><i class="pane p2"></i>
+      <i class="pane p1"><b></b><b></b></i>
+    </div>
+  )}
+
+  {step === 3 && (
+    <Fragment>
+      <svg class="pa3-ribbon" viewBox="0 0 260 230" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="pa3g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#3b33a8"/><stop offset=".5" stop-color="#6b5cff"/><stop offset="1" stop-color="#8f82ff"/></linearGradient>
+        </defs>
+        <path class="rb-base" d="M0 222 C 70 215, 95 175, 125 120 S 190 35, 262 22" />
+        <path class="rb-line" d="M0 222 C 70 215, 95 175, 125 120 S 190 35, 262 22" pathLength="100" />
+        <path class="rb-pulse" d="M0 222 C 70 215, 95 175, 125 120 S 190 35, 262 22" pathLength="100" />
+      </svg>
+      <span class="pa3-node n1" set:html={ic('cart')} />
+      <span class="pa3-node n2" set:html={ic('code')} />
+      <span class="pa3-node n3" set:html={ic('cloud')} />
+      <span class="pa3-node n4" set:html={ic('layers')} />
+      <div class="pa3-chip"><i></i><i></i></div>
+    </Fragment>
+  )}
+
+  {step === 4 && (
+    <div class="pa4-dial" data-dial>
+      <svg viewBox="0 0 260 200">
+        <defs><linearGradient id="pa4g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f82ff"/><stop offset="1" stop-color="#4a3fd6"/></linearGradient></defs>
+        {Array.from({ length: 5 }).map((_, i) => <path class={`dseg${i === 1 ? ' on' : ''}`} d={seg(i)} data-seg={i} />)}
+      </svg>
+      {growIcons.map((n, i) => {
+        const [x, y] = mid(i);
+        return <span class={`dicon${i === 1 ? ' on' : ''}`} style={`left:${(x / 260) * 100}%;top:${(y / 200) * 100}%`} data-icon={i} set:html={ic(n)} />;
+      })}
+    </div>
+  )}
+</div>

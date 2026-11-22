@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects, categories } from '../../data/projects.js';
+---
+<Base title="Work — Codvilo" description="Selected case studies by Codvilo: ecommerce stores, fintech and health apps, websites, branding and social media." path="/work/">
+  <section class="whead light" data-theme="light">
+    <div class="wrap">
+      <p class="tag" data-fade><i class="tag__dots"></i>Selected work · {projects.length} projects</p>
+      <h1 class="display whead__title" data-split>Work that looks good <span class="tone">and works harder.</span></h1>
+      <div class="filters" role="group" aria-label="Filter projects" data-fade>
+        {categories.map((c, i) => <button type="button" class={`filter${i === 0 ? ' is-on' : ''}`} data-filter={c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>)}
+      </div>
+    </div>
+  </section>
+  <section class="wlist light" data-theme="light">
+    <div class="wrap wlist__grid" data-grid>
+      {projects.map((p, i) => <ProjectCard project={p} wide={i % 4 === 0 || i % 4 === 3} eager={i < 2} />)}
+    </div>
+  </section>
+  <section class="cta cta--mini dark" data-theme="dark">
+    <div class="wrap cta__inner">
+      <p class="tag tag--dark" data-fade><i class="tag__dots"></i>Next step</p>
+      <h2 class="display cta__title" data-split>Want work like this? <span class="tone">Let’s talk.</span></h2>
+      <div class="hero__cta" data-fade>
+        <a class="btn btn--light btn--lg" href="mailto:hello@codvilo.com?subject=New%20project">Start a project</a>
+        <a class="btn btn--outline btn--lg" href="https://www.behance.net/Mohammad-Mohsin" target="_blank" rel="noopener">See Behance ↗</a>
+      </div>
+    </div>
+  </section>
+  <script>import '../../scripts/sub.js';</script>
+</Base>

@@ -1,0 +1,17 @@
+---
+const { project: p, wide = false, eager = false } = Astro.props;
+---
+<a class={`pcase${wide ? ' pcase--wide' : ''}`} href={`/work/${p.slug}/`} data-pcase data-cat={p.category}>
+  <div class="pcase__media" style={`--theme:${p.theme}`}>
+    <img src={p.cover.src} width={p.cover.w} height={p.cover.h} alt={`${p.title} — ${p.subtitle}`} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    <span class="pcase__view"><span>View case study</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></span>
+  </div>
+  <div class="pcase__meta">
+    <div>
+      <h3>{p.title}</h3>
+      <p>{p.subtitle}</p>
+    </div>
+    <span class="mono">{p.year}</span>
+  </div>
+  <ul class="pcase__tags">{[p.category, ...p.services.slice(0, 2)].map((t) => <li class="mono">{t}</li>)}</ul>
+</a>

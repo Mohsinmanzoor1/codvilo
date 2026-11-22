@@ -1,0 +1,9 @@
+{
+  // Fallback deploy: the whole site bundled into the Worker script (see scripts/gen-worker.mjs).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "codvilo",
+  "main": ".worker/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": false
+}

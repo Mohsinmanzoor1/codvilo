@@ -1,0 +1,222 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ServicesBento from '../components/ServicesBento.astro';
+import AboutStudio from '../components/AboutStudio.astro';
+import ProcessArt from '../components/ProcessArt.astro';
+import { testimonials } from '../data/content.js';
+import { projects } from '../data/projects.js';
+const featured = projects.filter((p) => p.featured).slice(0, 6);
+import {
+  siShopify, siWoocommerce, siWordpress, siWebflow, siStripe, siMeta, siInstagram,
+  siFacebook, siTiktok, siYoutube, siPinterest, siSnapchat, siWhatsapp, siGoogleads,
+  siGoogleanalytics, siMailchimp, siHubspot, siFigma, siAstro, siCloudflare, siGoogle,
+} from 'simple-icons';
+
+const email = 'hello@codvilo.com';
+
+const nav = [
+  { label: 'Work', href: '#work' },
+  { label: 'Services', href: '#services' },
+  { label: 'Process', href: '#process' },
+  { label: 'Platforms', href: '#platforms' },
+  { label: 'About', href: '#about' },
+];
+
+const marquee = [siShopify, siWoocommerce, siMeta, siInstagram, siTiktok, siGoogleads, siStripe, siWordpress, siYoutube, siFigma, siWebflow, siPinterest];
+
+const services = [
+  { key: 'ecom', title: 'Ecommerce solutions', text: 'Custom Shopify and WooCommerce stores, migrations and checkout tuning. Built to load fast and convert on every device.' },
+  { key: 'social', title: 'Social media', text: 'Strategy, content calendars, short-form video and community management that turn followers into customers.' },
+  { key: 'web', title: 'Web design & development', text: 'Expressive, fast websites designed in Figma and built on modern stacks, deployed to the edge.' },
+  { key: 'brand', title: 'Brand identity', text: 'Logo, type, colour and voice shaped into one system that holds up on a billboard, a box and a phone.' },
+  { key: 'ads', title: 'Paid advertising', text: 'Meta, Google and TikTok campaigns run on creative testing and clean tracking, measured against revenue.' },
+  { key: 'seo', title: 'SEO & content', text: 'Technical foundations, search-led content and plain-language reporting. Organic traffic that compounds.' },
+];
+
+const process = [
+  { title: 'Discover', text: 'Your numbers, customers and competitors, distilled into one clear brief everyone builds from.' },
+  { title: 'Design', text: 'Wireframes, visual direction and clickable prototypes. You see it before production starts.' },
+  { title: 'Build', text: 'Clean, tested and fast. Connected to your tools and checked on real devices.' },
+  { title: 'Grow', text: 'Content, ads and optimisation in monthly cycles, measured against the goals from day one.' },
+];
+
+const rowA = [siShopify, siWoocommerce, siMeta, siInstagram, siTiktok, siGoogleads, siStripe, siWordpress, siYoutube, siFigma];
+const rowB = [siWebflow, siFacebook, siPinterest, siSnapchat, siWhatsapp, siGoogleanalytics, siMailchimp, siHubspot, siAstro, siCloudflare];
+// Yellow brand marks need a darker tone to read on white.
+const brandHex = (m) => ({ Snapchat: '#E8C400', MailChimp: '#241C15' }[m.title] ?? `#${m.hex}`);
+const platforms = [
+  siShopify, siWoocommerce, siWordpress, siWebflow, siStripe, siMeta, siInstagram,
+  siFacebook, siTiktok, siYoutube, siPinterest, siSnapchat, siWhatsapp, siGoogleads,
+  siGoogleanalytics, siMailchimp, siHubspot, siFigma, siAstro, siCloudflare,
+];
+
+const icon = (s) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${s.path}"/></svg>`;
+
+const title = 'Codvilo — Ecommerce, Social Media & Web Agency';
+const description =
+  'Codvilo is a digital agency founded by Mohsin Manzoor. Ecommerce solutions, social media, web design, branding, paid ads and SEO for brands that want to grow.';
+---
+
+<Base title={title} description={description} home>
+      <!-- HERO -->
+      <section class="hero" data-theme="dark">
+        <div class="hero__glow" aria-hidden="true"></div>
+        <canvas class="hero__3d" data-hero3d aria-hidden="true"></canvas>
+        <div class="hero__fallback" aria-hidden="true"><span></span><span></span></div>
+        <div class="hero__inner wrap">
+          <p class="hero__tag" data-fade>[ Ecommerce + Social + Web ]</p>
+          <h1 class="display hero__title" data-split>Make your next move matter.</h1>
+          <p class="hero__lede" data-fade>
+            Ecommerce, social media, brand and web development. One team, from idea to launch.
+          </p>
+          <div class="hero__cta" data-fade>
+            <a class="btn btn--light btn--lg" href="#work" data-magnetic>View our work <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+            <a class="btn btn--outline btn--lg" href="#contact">Start a project</a>
+          </div>
+        </div>
+        <a class="hero__scroll wrap" href="#logos" data-fade>Scroll to explore <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg></a>
+      </section>
+
+      <!-- PLATFORM STRIP -->
+      <section class="strip dark" id="logos" data-theme="dark">
+        <p class="hero__logos-label">Platforms we build and grow on</p>
+        <div class="logostrip" aria-label="Platforms">
+          <div class="logostrip__track">
+            {[0, 1].map((k) => (
+              <div class="logostrip__group" aria-hidden={k === 1 ? 'true' : undefined}>
+                {marquee.map((m) => <span class="logostrip__item" title={m.title}><Fragment set:html={icon(m)} />{m.title}</span>)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- WORK -->
+      <section class="work section light" id="work" data-theme="light">
+        <div class="wrap">
+          <div class="section__head section__head--split">
+            <div>
+              <p class="tag" data-fade><i class="tag__dots"></i>Selected work</p>
+              <h2 class="display h2" data-split>Good things, <span class="tone">built to sell.</span></h2>
+            </div>
+            <div class="section__side" data-fade>
+              <p class="section__lede">Stores, apps, websites and social campaigns, each with a full case study.</p>
+              <a class="btn btn--dark" href="/work/">View all work <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+            </div>
+          </div>
+          <div class="wlist__grid">
+            {featured.map((p, i) => <ProjectCard project={p} wide={i % 4 === 0 || i % 4 === 3} />)}
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES (bento) -->
+      <ServicesBento />
+
+      <!-- PROCESS -->
+      <section class="process section dark" id="process" data-theme="dark">
+        <div class="wrap">
+          <div class="section__head">
+            <p class="tag tag--dark" data-fade><i class="tag__dots"></i>Process</p>
+            <h2 class="display h2" data-split>Four steps. <span class="tone">No mystery.</span></h2>
+          </div>
+          <div class="process__grid">
+            {process.map((p, i) => (
+              <article class="pcard" data-card data-pcard>
+                <div class="pcard__top"><span class="mono">0{i + 1}</span><span class="pcard__bar"><i style={`--p:${(i + 1) * 25}%`}></i></span></div>
+                <div class="pcard__art"><ProcessArt step={i + 1} /></div>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section class="testi section light" id="testimonials" data-theme="light">
+        <div class="wrap">
+          <div class="testi__head">
+            <div>
+              <p class="tag" data-fade><i class="tag__dots"></i>Testimonials</p>
+              <h2 class="display h2" data-split>Don’t take our word for it. <span class="tone">Take theirs.</span></h2>
+            </div>
+            <div class="testi__ctrl" data-fade>
+              <button class="testi__btn" type="button" aria-label="Previous testimonial" data-testi-prev><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg></button>
+              <button class="testi__btn" type="button" aria-label="Next testimonial" data-testi-next><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="testi__track" data-testi-track data-lenis-prevent-wheel>
+          {testimonials.map((t, i) => (
+            <figure class={`tcard${i === 0 ? ' tcard--dark' : ''}`} data-tcard>
+              {t.sample && <span class="mono tcard__badge">Sample</span>}
+              <svg class="tcard__mark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V14C0 6 4 1 12 0l1 4c-4 1-6 4-6 8h6v12H0Zm19 0V14c0-8 4-13 12-14l1 4c-4 1-6 4-6 8h6v12H19Z" /></svg>
+              <blockquote>{t.quote}</blockquote>
+              <figcaption>
+                {t.photo ? <img src={t.photo} alt="" /> : <span class="tcard__avatar">{t.initials}</span>}
+                <span><b>{t.name}</b><small>{t.role}</small></span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <div class="wrap"><div class="testi__progress" aria-hidden="true"><span data-testi-bar></span></div></div>
+      </section>
+
+      <!-- PLATFORMS -->
+      <section class="plat section light" id="platforms" data-theme="light">
+        <div class="wrap plat__head">
+          <div>
+            <p class="plat__tag" data-fade><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>Platforms</p>
+            <h2 class="display plat__title" data-split>Every app, <br />everywhere.</h2>
+          </div>
+          <div class="plat__side" data-fade>
+            <p class="plat__kicker">We build and grow on</p>
+            <p class="display plat__stat"><span class="lavtxt">{platforms.length}+</span> Platforms</p>
+            <div class="plat__pill">
+              <span class="plat__stack">{[siShopify, siMeta, siGoogleads, siTiktok].map((m) => <i style={`--b:#${m.hex}`}><Fragment set:html={icon(m)} /></i>)}</span>
+              Stores, social, ads and analytics
+            </div>
+          </div>
+        </div>
+        <div class="band" aria-label="Platforms we work with">
+          {[rowA, rowB].map((row, r) => (
+            <div class={`band__row band__row--${r ? 'b' : 'a'}`}>
+              <div class="band__track">
+                {[0, 1].map((k) => row.map((m, i) => (
+                  <div class="band__cell" style={`--i:${i}`} aria-hidden={k === 1 ? 'true' : undefined}>
+                    <span class="band__ic" style={`--b:${brandHex(m)}`} title={m.title}>
+                      <Fragment set:html={icon(m)} />
+                      <em class="band__tip">{m.title}</em>
+                    </span>
+                  </div>
+                )))}
+              </div>
+            </div>
+          ))}
+          <div class="band__glow" aria-hidden="true"></div>
+        </div>
+        <p class="wrap fineprint plat__fine">All product names and logos are trademarks of their respective owners.</p>
+      </section>
+
+      <!-- ABOUT (studio) -->
+      <AboutStudio />
+
+      <!-- CTA -->
+      <section class="cta dark" id="contact" data-theme="dark">
+        <canvas class="field" data-field-cta aria-hidden="true"></canvas>
+        <div class="wrap cta__inner">
+          <p class="tag tag--dark" data-fade><i class="tag__dots"></i>Contact</p>
+          <h2 class="display cta__title" data-split>Have a project in mind? <span class="tone">Let’s build something that sells.</span></h2>
+          <div class="hero__cta" data-fade>
+            <a class="btn btn--light" href={`mailto:${email}?subject=New%20project`} data-magnetic>Start a project</a>
+            <a class="btn btn--ghost-dark" href={`mailto:${email}`}>{email}</a>
+          </div>
+        </div>
+      </section>
+    <script>
+      import '../scripts/main.js';
+    </script>
+</Base>

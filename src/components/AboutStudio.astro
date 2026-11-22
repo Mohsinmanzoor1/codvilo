@@ -1,0 +1,114 @@
+---
+// "About us" section modelled on Stokt's layout: stat cards, a 3D mark,
+// a live wireframe globe, founder cards and a scrolling toolbox.
+import '../styles/about.css';
+import Logo from './Logo.astro';
+import {
+  siFigma, siFramer, siWebflow, siShopify, siWordpress, siWoocommerce, siReact, siNextdotjs, siAstro,
+  siTailwindcss, siNotion, siBlender, siGithub, siVercel, siCloudflare, siGoogleanalytics, siMeta, siClaude,
+} from 'simple-icons';
+import { projects } from '../data/projects.js';
+
+const email = 'hello@codvilo.com';
+const tools = [
+  { t: 'Figma', s: siFigma }, { t: 'Photoshop', l: 'Ps', c: '#31a8ff', b: '#001e36' }, { t: 'Illustrator', l: 'Ai', c: '#ff9a00', b: '#330000' },
+  { t: 'Framer', s: siFramer }, { t: 'Webflow', s: siWebflow }, { t: 'Shopify', s: siShopify }, { t: 'WordPress', s: siWordpress },
+  { t: 'WooCommerce', s: siWoocommerce }, { t: 'React', s: siReact }, { t: 'Next.js', s: siNextdotjs }, { t: 'Astro', s: siAstro },
+  { t: 'Tailwind CSS', s: siTailwindcss }, { t: 'Notion', s: siNotion }, { t: 'Blender', s: siBlender }, { t: 'Claude', s: siClaude },
+  { t: 'GitHub', s: siGithub }, { t: 'Vercel', s: siVercel }, { t: 'Cloudflare', s: siCloudflare }, { t: 'Google Analytics', s: siGoogleanalytics }, { t: 'Meta', s: siMeta },
+];
+// Icons that are black in brand colour get white so they show on dark tiles.
+const fillFor = (s) => (['000000', '0055FF', '181717'].includes(s.hex) ? '#f3f2ee' : `#${s.hex}`);
+const stats = [
+  { n: 20, s: '+', l: 'Platforms we build on' },
+  { n: 6, s: '', l: 'Core services' },
+  { n: projects.length, s: '', l: 'Published case studies' },
+];
+const cube = (cls) => `<div class="cube3 ${cls}"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="f5"></i><i class="f6"></i></div>`;
+---
+<section class="about dark" id="about" data-theme="dark" data-about>
+  <div class="wrap">
+    <p class="about__label mono" data-fade>( About us ) <span aria-hidden="true">↓</span></p>
+
+    <div class="about__grid">
+      <!-- Stats -->
+      <div class="ab-stats">
+        {stats.map((st) => (
+          <div class="ab-card ab-stat" data-ab>
+            <b class="display"><span data-count={st.n}>{st.n}</span>{st.s}</b>
+            <small>{st.l}</small>
+          </div>
+        ))}
+      </div>
+
+      <!-- 3D mark -->
+      <a class="ab-card ab-mark" href="#services" data-ab data-tilt data-cursor="Explore">
+        <div class="ab-mark__scene" aria-hidden="true">
+          <div class="ab-mark__obj" data-obj><Fragment set:html={cube('c1') + cube('c2')} /></div>
+          <div class="ab-mark__floor"></div>
+        </div>
+        <div class="ab-foot"><b>Design + development studio</b><span>Learn more →</span></div>
+      </a>
+
+      <!-- Globe -->
+      <div class="ab-card ab-globe" data-ab data-cursor="Drag">
+        <div class="ab-globe__head">
+          <p class="display">Based in Lahore, Pakistan</p>
+          <p class="mono ab-live"><i></i>Available worldwide</p>
+        </div>
+        <canvas class="ab-globe__cv" data-globe aria-label="Globe showing Lahore, Pakistan"></canvas>
+      </div>
+
+      <!-- Founder portrait -->
+      <div class="ab-card ab-portrait" data-ab data-tilt data-cursor="Hi">
+        <div class="ab-portrait__art">
+          <img class="ab-portrait__img" src="/about/mohsin-manzoor.webp" width="840" height="895" alt="Mohsin Manzoor, founder of Codvilo" loading="lazy" decoding="async" />
+          <span class="ab-portrait__tone" aria-hidden="true"></span>
+          <span class="ab-portrait__grain" aria-hidden="true"></span>
+        </div>
+        <div class="ab-portrait__cap">
+          <b>Mohsin Manzoor</b>
+          <span class="mono">Founder &amp; design lead of Codvilo</span>
+        </div>
+      </div>
+
+      <!-- Founder story -->
+      <div class="ab-card ab-story" data-ab>
+        <h3 class="display">The Founder</h3>
+        <p>Mohsin started Codvilo to give brands one accountable partner for everything digital. A UI/UX and product designer by trade, he has designed fintech and health apps, dashboards, ecommerce stores and social campaigns for brands at home and abroad.</p>
+        <p>His work brings strategy, interface design and development together, with a focus on products that are clear, fast and easy to use. Every project starts with research and ends with a system the client can actually run.</p>
+        <p>From a single landing page to a full store and content plan, Mohsin stays involved from the first call to launch, so every decision is intentional and built to last.</p>
+        <div class="ab-story__foot">
+          <span class="ab-sign" aria-hidden="true"><Logo /></span>
+          <a class="ab-link" href={`mailto:${email}?subject=Working%20with%20Codvilo`} data-cursor="Write">Work with Mohsin →</a>
+        </div>
+      </div>
+
+      <!-- Behance -->
+      <a class="ab-card ab-mark ab-mark--alt" href="https://www.behance.net/Mohammad-Mohsin" target="_blank" rel="noopener" data-ab data-tilt data-cursor="Open">
+        <div class="ab-mark__scene" aria-hidden="true">
+          <div class="ab-mark__obj ab-mark__obj--solo" data-obj><Fragment set:html={cube('c3')} /></div>
+          <div class="ab-mark__floor"></div>
+        </div>
+        <div class="ab-foot"><b>Portfolio on Behance</b><span>View profile ↗</span></div>
+      </a>
+
+      <!-- Toolbox -->
+      <div class="ab-card ab-tools" data-ab>
+        <div class="ab-tools__label"><b>Everyday toolbox</b><span>What we design and build with.</span></div>
+        <div class="ab-tools__strip">
+          <div class="ab-tools__track">
+            {[0, 1].map((k) => tools.map((x) => (
+              <span class="ab-tool" title={x.t} aria-hidden={k === 1 ? 'true' : undefined}>
+                {x.s ? <svg viewBox="0 0 24 24" role="img" aria-label={x.t}><path d={x.s.path} fill={fillFor(x.s)} /></svg>
+                     : <em style={`--c:${x.c};--b:${x.b}`}>{x.l}</em>}
+                <i class="ab-tool__tip">{x.t}</i>
+              </span>
+            )))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ab-cursor" aria-hidden="true" data-ab-cursor><span></span></div>
+</section>

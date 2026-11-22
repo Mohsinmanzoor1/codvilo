@@ -1,0 +1,108 @@
+---
+import '@fontsource-variable/geist/wght.css';
+import '@fontsource-variable/geist-mono/wght.css';
+import '@fontsource-variable/inter/wght.css';
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  image?: string;
+  home?: boolean;
+  jsonld?: object;
+}
+const { title, description, path = '/', image, home = false, jsonld } = Astro.props;
+const email = 'hello@codvilo.com';
+const p = home ? '' : '/';
+const nav = [
+  { label: 'Work', href: home ? '#work' : '/work/' },
+  { label: 'Services', href: `${p}#services` },
+  { label: 'Process', href: `${p}#process` },
+  { label: 'Platforms', href: `${p}#platforms` },
+  { label: 'About', href: `${p}#about` },
+];
+const services = ['Ecommerce solutions', 'Social media', 'Web design & development', 'Brand identity', 'Paid advertising', 'SEO & content'];
+const url = `https://codvilo.com${path}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <link rel="preconnect" href="https://mir-s3-cdn-cf.behance.net" crossorigin />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? {
+      '@context': 'https://schema.org',
+      '@type': 'ProfessionalService',
+      name: 'Codvilo',
+      url: 'https://codvilo.com',
+      founder: { '@type': 'Person', name: 'Mohsin Manzoor' },
+      description,
+    })} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <header class="nav" data-nav>
+      <a class="nav__logo" href={home ? '#top' : '/'} aria-label="Codvilo home"><Logo /></a>
+      <nav class="nav__pill" aria-label="Primary">
+        {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+      </nav>
+      <a class="btn btn--light nav__cta" href={`${p}#contact`}>Start a project <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+      <button class="burger" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
+    </header>
+
+    <div class="menu" data-menu aria-hidden="true">
+      <nav aria-label="Mobile">
+        {[...nav, { label: 'Contact', href: `${p}#contact` }].map((n, i) => (
+          <a href={n.href} data-menu-link><small>0{i + 1}</small><span>{n.label}</span></a>
+        ))}
+      </nav>
+      <a class="menu__mail" href={`mailto:${email}`}>{email}</a>
+    </div>
+
+    <main id="top">
+      <slot />
+    </main>
+
+    <footer class="footer dark" data-theme="dark">
+      <div class="wrap footer__grid">
+        <div class="footer__brand">
+          <a href={home ? '#top' : '/'} aria-label="Codvilo home"><Logo /></a>
+          <p>Ecommerce, social media and web for ambitious brands.</p>
+          <a class="footer__mail" href={`mailto:${email}`}>{email}</a>
+        </div>
+        <div class="footer__col">
+          <p class="mono">Index</p>
+          {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+        </div>
+        <div class="footer__col">
+          <p class="mono">Services</p>
+          {services.map((s) => <a href={`${p}#services`}>{s}</a>)}
+        </div>
+        <div class="footer__col">
+          <p class="mono">Contact</p>
+          <a href={`mailto:${email}`}>Email us</a>
+          <a href="https://www.behance.net/Mohammad-Mohsin" target="_blank" rel="noopener">Behance ↗</a>
+          <a href="#top">Back to top ↑</a>
+        </div>
+      </div>
+      <div class="wrap footer__bottom">
+        <span>© {new Date().getFullYear()} Codvilo. All rights reserved.</span>
+        <span>Founded by Mohsin Manzoor</span>
+      </div>
+    </footer>
+  </body>
+</html>

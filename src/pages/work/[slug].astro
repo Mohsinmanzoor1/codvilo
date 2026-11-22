@@ -1,0 +1,105 @@
+---
+import Base from '../../layouts/Base.astro';
+import { projects } from '../../data/projects.js';
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({ params: { slug: p.slug }, props: { p, next: projects[(i + 1) % projects.length] } }));
+}
+const { p, next } = Astro.props;
+const n = (i) => String(i).padStart(2, '0');
+let s = 0;
+const sec = () => n(++s);
+const gallery = p.images.slice(1);
+---
+<Base title={`${p.title} — ${p.subtitle} · Codvilo`} description={p.summary} path={`/work/${p.slug}/`} image={p.cover.src}
+  jsonld={{ '@context': 'https://schema.org', '@type': 'CreativeWork', name: `${p.title} — ${p.subtitle}`, description: p.summary, image: p.cover.src, dateCreated: p.year, creator: { '@type': 'Organization', name: 'Codvilo', founder: { '@type': 'Person', name: 'Mohsin Manzoor' } } }}>
+  <article class="case" style={`--theme:${p.theme};--accent-c:${p.accent}`}>
+    <header class="case__hero dark" data-theme="dark">
+      <div class="wrap">
+        <nav class="crumbs mono" aria-label="Breadcrumb" data-fade><a href="/work/">Work</a><span>/</span><span>{p.title}</span></nav>
+        <h1 class="display case__title" data-split>{p.title} <span class="tone">{p.subtitle}</span></h1>
+        <p class="case__summary" data-fade>{p.summary}</p>
+        <dl class="case__meta" data-fade>
+          <div><dt class="mono">Client</dt><dd>{p.client}</dd></div>
+          <div><dt class="mono">Year</dt><dd>{p.year}</dd></div>
+          <div><dt class="mono">Services</dt><dd>{p.services.join(', ')}</dd></div>
+          <div><dt class="mono">Tools</dt><dd>{p.tools.join(', ')}</dd></div>
+        </dl>
+      </div>
+      <div class="wrap">
+        <figure class="case__cover" data-cover>
+          <img src={p.cover.src} srcset={`${p.cover.src} 1400w, ${p.cover.hi} 2800w`} sizes="(max-width: 1300px) 100vw, 1240px" width={p.cover.w} height={p.cover.h} alt={`${p.title} cover`} fetchpriority="high" />
+        </figure>
+      </div>
+    </header>
+
+    <section class="case__body light" data-theme="light">
+      <div class="wrap">
+        <div class="crow">
+          <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Overview</p>
+          <p class="crow__lead display" data-fade>{p.overview}</p>
+        </div>
+
+        <div class="cpair">
+          <div class="ccard" data-fade>
+            <p class="tag"><i class="tag__dots"></i>({sec()}) The challenge</p>
+            <p>{p.challenge}</p>
+          </div>
+          <div class="ccard ccard--theme" data-fade>
+            <p class="tag"><i class="tag__dots"></i>({sec()}) The solution</p>
+            <p>{p.solution}</p>
+          </div>
+        </div>
+
+        <div class="crow">
+          <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Process</p>
+          <ol class="csteps">
+            {p.process.map((step, i) => <li data-step><span class="mono">{n(i + 1)}</span>{step}</li>)}
+          </ol>
+        </div>
+
+        {p.insights.length > 0 && (
+          <div class="crow">
+            <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Research insights</p>
+            <div class="cstats">
+              {p.insights.map((it) => <div class="cstat" data-stat><b class="display" data-count={it.value}>{it.value}</b><span>{it.label}</span></div>)}
+            </div>
+            <p class="cnote">Figures from the research in this case study.</p>
+          </div>
+        )}
+
+        {p.details.length > 0 && (
+          <div class="crow">
+            <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Design details</p>
+            <dl class="cdetails" data-fade>{p.details.map((d) => <div><dt class="mono">{d.label}</dt><dd>{d.value}</dd></div>)}</dl>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <section class="case__gallery light" data-theme="light">
+      <div class="wrap">
+        <div class="cgal__head">
+          <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) The full case study</p>
+          <a class="btn btn--dark" href={p.behance} target="_blank" rel="noopener">View on Behance <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+        </div>
+        <div class="cgal">
+          {gallery.map((img, i) => (
+            <figure class={`cgal__item${img.w <= 1440 && img.w === img.h ? ' cgal__item--sq' : ''}`} data-gal>
+              <img src={img.src} srcset={img.hi !== img.src ? `${img.src} 1400w, ${img.hi} 2800w` : undefined} sizes="(max-width: 1300px) 100vw, 1240px" width={img.w} height={img.h} alt={`${p.title} case study, image ${i + 2}`} loading="lazy" decoding="async" />
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="cnext dark" data-theme="dark">
+      <a class="wrap cnext__link" href={`/work/${next.slug}/`}>
+        <span class="mono cnext__label">Next project</span>
+        <span class="display cnext__title">{next.title} <span class="tone">{next.subtitle}</span></span>
+        <span class="cnext__img"><img src={next.cover.src} width={next.cover.w} height={next.cover.h} alt="" loading="lazy" /></span>
+      </a>
+    </section>
+  </article>
+  <script>import '../../scripts/sub.js';</script>
+</Base>
