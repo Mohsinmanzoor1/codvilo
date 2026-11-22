@@ -7,8 +7,6 @@ export function getStaticPaths() {
 }
 const { p, next } = Astro.props;
 const n = (i) => String(i).padStart(2, '0');
-let s = 0;
-const sec = () => n(++s);
 const gallery = p.images.slice(1);
 ---
 <Base title={`${p.title} — ${p.subtitle} · Codvilo`} description={p.summary} path={`/work/${p.slug}/`} image={p.cover.src}
@@ -36,23 +34,23 @@ const gallery = p.images.slice(1);
     <section class="case__body light" data-theme="light">
       <div class="wrap">
         <div class="crow">
-          <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Overview</p>
+          <p class="tag" data-fade><i class="tag__dots"></i>Overview</p>
           <p class="crow__lead display" data-fade>{p.overview}</p>
         </div>
 
         <div class="cpair">
           <div class="ccard" data-fade>
-            <p class="tag"><i class="tag__dots"></i>({sec()}) The challenge</p>
+            <p class="tag"><i class="tag__dots"></i>The challenge</p>
             <p>{p.challenge}</p>
           </div>
           <div class="ccard ccard--theme" data-fade>
-            <p class="tag"><i class="tag__dots"></i>({sec()}) The solution</p>
+            <p class="tag"><i class="tag__dots"></i>The solution</p>
             <p>{p.solution}</p>
           </div>
         </div>
 
         <div class="crow">
-          <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Process</p>
+          <p class="tag" data-fade><i class="tag__dots"></i>Process</p>
           <ol class="csteps">
             {p.process.map((step, i) => <li data-step><span class="mono">{n(i + 1)}</span>{step}</li>)}
           </ol>
@@ -60,7 +58,7 @@ const gallery = p.images.slice(1);
 
         {p.insights.length > 0 && (
           <div class="crow">
-            <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Research insights</p>
+            <p class="tag" data-fade><i class="tag__dots"></i>Research insights</p>
             <div class="cstats">
               {p.insights.map((it) => <div class="cstat" data-stat><b class="display" data-count={it.value}>{it.value}</b><span>{it.label}</span></div>)}
             </div>
@@ -70,7 +68,7 @@ const gallery = p.images.slice(1);
 
         {p.details.length > 0 && (
           <div class="crow">
-            <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) Design details</p>
+            <p class="tag" data-fade><i class="tag__dots"></i>Design details</p>
             <dl class="cdetails" data-fade>{p.details.map((d) => <div><dt class="mono">{d.label}</dt><dd>{d.value}</dd></div>)}</dl>
           </div>
         )}
@@ -80,7 +78,7 @@ const gallery = p.images.slice(1);
     <section class="case__gallery light" data-theme="light">
       <div class="wrap">
         <div class="cgal__head">
-          <p class="tag" data-fade><i class="tag__dots"></i>({sec()}) The full case study</p>
+          <p class="tag" data-fade><i class="tag__dots"></i>The full case study</p>
           <a class="btn btn--dark" href={p.behance} target="_blank" rel="noopener">View on Behance <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
         </div>
         <div class="cgal">

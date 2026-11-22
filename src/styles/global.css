@@ -761,3 +761,14 @@ h3 { font-family: var(--display); font-weight: 500; letter-spacing: var(--track)
 }
 @media (prefers-reduced-motion: reduce) { .band__track { animation: none; } }
 .band__ic[title="WooCommerce"] svg { width: 70%; height: 70%; }
+
+/* ===== Eyebrow: one style everywhere ===== */
+.tag {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 24px;
+  font-family: var(--mono); font-size: 12px; font-weight: 400; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted);
+}
+.tag--dark { color: var(--muted-dark); }
+.tag__dots { width: 10px; height: 10px; flex: none; color: var(--accent); background: radial-gradient(circle, currentColor 1.1px, transparent 1.4px) 0 0 / 5px 5px; }
+.strip__tag { margin-bottom: 22px; }
+.strip { text-align: center; }
