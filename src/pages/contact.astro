@@ -77,10 +77,10 @@ const check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 
             <label class="hp" aria-hidden="true">Website <input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
 
             <div class="ct-submit">
-              <button class="ct-send" type="submit" data-send>
-                <span class="ct-send__dots" aria-hidden="true">{Array.from({ length: 16 }).map(() => <i></i>)}</span>
+              <button class="btn btn--primary btn--lg ct-send" type="submit" data-send>
                 <span class="ct-send__label">Send message</span>
                 <span class="ct-send__spin" aria-hidden="true"></span>
+                <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
               </button>
               <p class="ct-note">By sending, you agree we can reply to you by email. No spam, ever.</p>
             </div>
@@ -92,8 +92,8 @@ const check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 
             <h2 class="display">Message sent<span class="tone">.</span></h2>
             <p data-done-text>Thanks! Your message is in our inbox and we’ll reply soon.</p>
             <div class="ct-done__actions">
-              <a class="btn btn--light btn--lg" href="/work/">Explore our work</a>
-              <button class="btn btn--outline btn--lg" type="button" data-again>Send another</button>
+              <a class="btn btn--primary btn--lg" href="/work/">Explore our work <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+              <button class="btn btn--secondary btn--lg" type="button" data-again>Send another</button>
             </div>
           </div>
         </div>
@@ -112,12 +112,8 @@ const check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 
           <div class="ct-card ct-loc" data-fade>
             <div>
               <p class="tag tag--dark"><i class="tag__dots"></i>Studio</p>
-              <p class="ct-loc__city display">Lahore, Pakistan</p>
-              <p class="ct-live mono"><i></i>Available worldwide</p>
-            </div>
-            <div class="ct-clock" aria-label="Local time in Lahore">
-              <b class="display" data-clock>--:--</b>
-              <small class="mono" data-clock-zone>Local time · PKT</small>
+              <p class="ct-loc__city display">Available worldwide</p>
+              <p class="ct-live mono"><i></i>Open to new projects</p>
             </div>
           </div>
 

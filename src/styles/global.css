@@ -776,3 +776,52 @@ h3 { font-family: var(--display); font-weight: 500; letter-spacing: var(--track)
 /* Hero heading: two lines on wide screens */
 .hero__title { max-width: none; white-space: nowrap; font-size: clamp(44px, 5.6vw, 92px); }
 @media (max-width: 760px) { .hero__title { white-space: normal; font-size: clamp(40px, 11.5vw, 60px); } }
+
+/* ===== Buttons: one system everywhere =====
+   Primary  = white, violet fill sweeps up on hover.
+   Secondary = outline, violet border + tint on hover. */
+.btn {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  height: 46px; padding: 0 22px; border-radius: 10px; border: 1px solid transparent;
+  font-family: var(--body); font-size: 15px; font-weight: 500; letter-spacing: var(--track); line-height: 1; white-space: nowrap;
+  cursor: pointer; text-decoration: none;
+  transition: color 0.35s var(--ease), border-color 0.35s var(--ease), background-color 0.35s var(--ease), box-shadow 0.45s var(--ease), translate 0.45s var(--ease);
+}
+.btn--lg { height: 52px; padding: 0 26px; font-size: 16px; }
+.btn .arr { width: 15px; height: 15px; flex: none; transition: transform 0.45s var(--ease); }
+.btn:hover .arr, .btn:focus-visible .arr { transform: translate(3px, -3px); }
+.btn:hover { translate: 0 -2px; }
+.btn:active { translate: 0 0; transition-duration: 0.1s; }
+
+.btn--primary { background: #ffffff; color: #0a0a0a; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
+.btn--primary::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: linear-gradient(140deg, #7d6fff, #6b5cff 55%, #5446e0);
+  transform: translateY(101%); transition: transform 0.5s var(--ease);
+}
+.btn--primary:hover, .btn--primary:focus-visible { color: #fff; box-shadow: 0 12px 28px -10px rgba(107, 92, 255, 0.7); }
+.btn--primary:hover::before, .btn--primary:focus-visible::before { transform: translateY(0); }
+/* on light backgrounds the white button gets an edge so it doesn't disappear */
+.light .btn--primary, .nav.is-light .btn--primary { border-color: rgba(10, 10, 10, 0.12); box-shadow: 0 1px 2px rgba(10, 10, 10, 0.06), 0 6px 16px -8px rgba(10, 10, 10, 0.18); }
+.light .btn--primary:hover, .nav.is-light .btn--primary:hover { border-color: transparent; box-shadow: 0 12px 28px -10px rgba(107, 92, 255, 0.7); }
+
+.btn--secondary { background: transparent; color: var(--fg-dark); border-color: rgba(245, 244, 240, 0.32); }
+.btn--secondary:hover, .btn--secondary:focus-visible { border-color: #8f82ff; background: rgba(107, 92, 255, 0.12); color: #fff; }
+.light .btn--secondary { color: var(--black); border-color: rgba(10, 10, 10, 0.2); }
+.light .btn--secondary:hover { border-color: #6b5cff; background: rgba(107, 92, 255, 0.08); color: #3d31c9; }
+
+/* nav button: same style, compact size; reset older overrides */
+.nav__cta, .nav.is-light .nav__cta { height: 40px; padding: 0 16px; font-size: 14px; background: #ffffff; color: #0a0a0a; }
+.nav__cta:hover, .nav.is-light .nav__cta:hover { color: #fff; background: #ffffff; }
+.bx-cta { margin-top: 26px; position: relative; z-index: 2; align-self: flex-start; }
+.bx-studio__copy .bx-cta { margin-top: auto; }
+
+/* contact send button keeps its spinner */
+.ct-send.is-busy { pointer-events: none; }
+.ct-send .ct-send__spin { display: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(10, 10, 10, 0.2); border-top-color: #0a0a0a; animation: spinR 0.7s linear infinite; }
+.ct-send.is-busy .ct-send__spin { display: block; }
+.ct-send.is-busy .arr { display: none; }
+
+@media (max-width: 760px) { .btn--lg { height: 50px; padding: 0 22px; font-size: 15px; } }
+.btn--primary:hover, .btn--primary:focus-visible, .nav__cta:hover, .nav.is-light .nav__cta:hover { background-color: #6b5cff; transition: color 0.35s var(--ease), border-color 0.35s var(--ease), background-color 0s 0.45s, box-shadow 0.45s var(--ease), translate 0.45s var(--ease); }

@@ -74,7 +74,9 @@ function countUp(el, to, reduced) {
 
 function startGlobe(cv, { geoOrthographic, geoPath, geoGraticule10, land, reduced }) {
   const ctx = cv.getContext('2d');
-  const HOME = [74.3587, 31.5204]; // Lahore
+  // Pulsing points in a few world cities: "available worldwide".
+  const POINTS = [[-74.006, 40.713], [-0.128, 51.507], [55.296, 25.276], [103.82, 1.352], [151.209, -33.868], [-79.383, 43.653], [13.405, 52.52], [-46.633, -23.55]];
+  const HOME = [20, 25];
   const proj = geoOrthographic().clipAngle(90).precision(0.4);
   const path = geoPath(proj, ctx);
   const grat = geoGraticule10();
@@ -104,15 +106,16 @@ function startGlobe(cv, { geoOrthographic, geoPath, geoGraticule10, land, reduce
     // land outlines
     ctx.beginPath(); path(land); ctx.fillStyle = 'rgba(107,92,255,0.07)'; ctx.fill();
     ctx.lineWidth = 0.9; ctx.strokeStyle = 'rgba(243,242,238,0.75)'; ctx.stroke();
-    // home marker (visible hemisphere only)
-    const p = proj(HOME);
-    const visibleHome = Math.cos(((HOME[0] + rot[0]) * Math.PI) / 180) * Math.cos(((HOME[1] + rot[1]) * Math.PI) / 180) > 0;
-    if (p && visibleHome) {
-      const pulse = (t % 90) / 90;
-      ctx.beginPath(); ctx.arc(p[0], p[1], 4 + pulse * 16, 0, Math.PI * 2); ctx.strokeStyle = `rgba(169,156,255,${1 - pulse})`; ctx.lineWidth = 1.5; ctx.stroke();
-      ctx.beginPath(); ctx.arc(p[0], p[1], 4.5, 0, Math.PI * 2); ctx.fillStyle = '#6b5cff'; ctx.fill();
-      ctx.beginPath(); ctx.arc(p[0], p[1], 1.8, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
-    }
+    // city markers (visible hemisphere only)
+    POINTS.forEach((pt, k) => {
+      const vis = Math.cos(((pt[0] + rot[0]) * Math.PI) / 180) * Math.cos(((pt[1] + rot[1]) * Math.PI) / 180) > 0;
+      const q = proj(pt);
+      if (!q || !vis) return;
+      const pulse = ((t + k * 23) % 90) / 90;
+      ctx.beginPath(); ctx.arc(q[0], q[1], 3 + pulse * 13, 0, Math.PI * 2); ctx.strokeStyle = `rgba(169,156,255,${1 - pulse})`; ctx.lineWidth = 1.3; ctx.stroke();
+      ctx.beginPath(); ctx.arc(q[0], q[1], 3.6, 0, Math.PI * 2); ctx.fillStyle = '#6b5cff'; ctx.fill();
+      ctx.beginPath(); ctx.arc(q[0], q[1], 1.4, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+    });
   };
 
   const loop = () => {

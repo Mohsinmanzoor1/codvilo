@@ -113,10 +113,3 @@ copyBtn.addEventListener('click', async () => {
   $('[data-copy-label]').textContent = 'Copied!';
   setTimeout(() => { copyBtn.classList.remove('is-copied'); $('[data-copy-label]').textContent = 'Copy address'; }, 1800);
 });
-
-// Live local time in Lahore.
-const clock = $('[data-clock]');
-const fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Karachi' });
-const tick = () => { clock.textContent = fmt.format(new Date()); };
-tick();
-setInterval(tick, 15000);
