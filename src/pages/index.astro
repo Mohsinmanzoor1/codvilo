@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Logo from '../components/Logo.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import FeaturedWork from '../components/FeaturedWork.astro';
 import ServicesBento from '../components/ServicesBento.astro';
 import AboutStudio from '../components/AboutStudio.astro';
 import ProcessArt from '../components/ProcessArt.astro';
@@ -94,23 +94,7 @@ const description =
       </section>
 
       <!-- WORK -->
-      <section class="work section light" id="work" data-theme="light">
-        <div class="wrap">
-          <div class="section__head section__head--split">
-            <div>
-              <p class="tag" data-fade><i class="tag__dots"></i>Selected work</p>
-              <h2 class="display h2" data-split>Good things, <span class="tone">built to sell.</span></h2>
-            </div>
-            <div class="section__side" data-fade>
-              <p class="section__lede">Stores, apps, websites and social campaigns, each with a full case study.</p>
-              <a class="btn btn--primary" href="/work/">View all work <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
-            </div>
-          </div>
-          <div class="wlist__grid">
-            {featured.map((p, i) => <ProjectCard project={p} wide={i % 4 === 0 || i % 4 === 3} />)}
-          </div>
-        </div>
-      </section>
+      <FeaturedWork projects={featured} />
 
       <!-- SERVICES (bento) -->
       <ServicesBento />

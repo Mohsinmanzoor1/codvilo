@@ -5,6 +5,7 @@ import { initField } from './field.js';
 import { initHero3D } from './hero3d.js';
 import { initBento } from './bento.js';
 import { initAbout } from './about.js';
+import { initFeatured } from './featured.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,6 +58,7 @@ $$('[data-theme="light"]').forEach((sec) => {
 /* ---------- Services bento ---------- */
 initBento({ reduced });
 initAbout({ reduced });
+initFeatured({ reduced });
 
 /* ---------- Process cards: reveal, typing brief, grow dial ---------- */
 {
@@ -215,7 +217,6 @@ if (reduced) {
   });
   gsap.from('[data-card]', { opacity: 0, y: 40, duration: 1, ease: EASE, stagger: 0.08, scrollTrigger: { trigger: '.process__grid', start: 'top 85%' } });
   gsap.from('.pcard__bar i', { scaleX: 0, transformOrigin: 'left', duration: 1.4, ease: EASE, stagger: 0.1, scrollTrigger: { trigger: '.process__grid', start: 'top 80%' } });
-  gsap.from('[data-pcase]', { opacity: 0, y: 48, duration: 1.1, ease: EASE, stagger: 0.1, scrollTrigger: { trigger: '.wlist__grid', start: 'top 85%' } });
   gsap.from('[data-tcard]', { opacity: 0, x: 60, duration: 1.1, ease: EASE, stagger: 0.08, scrollTrigger: { trigger: '[data-testi-track]', start: 'top 85%' } });
   gsap.from('.band__ic', { scale: 0.6, opacity: 0, duration: 1, ease: 'back.out(1.6)', stagger: { each: 0.03, from: 'center' }, scrollTrigger: { trigger: '.band', start: 'top 85%' } });
   if (false) gsap.from('.logo', { opacity: 0, y: 24, duration: 0.9, ease: EASE, stagger: { each: 0.03, grid: 'auto', from: 'start' }, scrollTrigger: { trigger: '[data-logos]', start: 'top 85%' } });
