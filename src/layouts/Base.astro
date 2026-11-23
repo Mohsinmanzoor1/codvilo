@@ -60,13 +60,13 @@ const url = `https://codvilo.com${path}`;
       <nav class="nav__pill" aria-label="Primary">
         {nav.map((n) => <a href={n.href}>{n.label}</a>)}
       </nav>
-      <a class="btn btn--light nav__cta" href={`${p}#contact`}>Start a project <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
+      <a class="btn btn--light nav__cta" href="/contact/">Start a project <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
       <button class="burger" aria-label="Open menu" aria-expanded="false" data-burger><span></span><span></span></button>
     </header>
 
     <div class="menu" data-menu aria-hidden="true">
       <nav aria-label="Mobile">
-        {[...nav, { label: 'Contact', href: `${p}#contact` }].map((n, i) => (
+        {[...nav, { label: 'Contact', href: '/contact/' }].map((n, i) => (
           <a href={n.href} data-menu-link><small>0{i + 1}</small><span>{n.label}</span></a>
         ))}
       </nav>
@@ -94,6 +94,7 @@ const url = `https://codvilo.com${path}`;
         </div>
         <div class="footer__col">
           <p class="mono">Contact</p>
+          <a href="/contact/">Contact form</a>
           <a href={`mailto:${email}`}>Email us</a>
           <a href="https://www.behance.net/Mohammad-Mohsin" target="_blank" rel="noopener">Behance ↗</a>
           <a href="#top">Back to top ↑</a>

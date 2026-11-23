@@ -5,5 +5,8 @@
   "main": ".worker/index.js",
   "compatibility_date": "2026-11-01",
   "workers_dev": true,
-  "preview_urls": false
+  "preview_urls": false,
+  // Contact form: sends through Email Routing to the verified studio inbox.
+  "send_email": [{ "name": "CONTACT", "destination_address": "hello.codvilo@gmail.com" }],
+  "observability": { "enabled": true }
 }

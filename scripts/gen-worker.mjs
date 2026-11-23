@@ -19,7 +19,8 @@ const files = {};
   }
 })(root);
 
-const worker = `const FILES = ${JSON.stringify(files)};
+const worker = `import { handleContact } from '../worker/contact.js';
+const FILES = ${JSON.stringify(files)};
 const cache = new Map();
 function body(p) {
   if (!cache.has(p)) {
@@ -31,13 +32,14 @@ function body(p) {
   return cache.get(p);
 }
 export default {
-  fetch(request) {
+  fetch(request, env) {
     const url = new URL(request.url);
     // One canonical address: www.codvilo.com -> codvilo.com (permanent).
     if (url.hostname === 'www.codvilo.com') {
       url.hostname = 'codvilo.com';
       return Response.redirect(url.toString(), 301);
     }
+    if (url.pathname === '/api/contact') return handleContact(request, env);
     if (request.method !== 'GET' && request.method !== 'HEAD') return new Response('Method not allowed', { status: 405 });
     let p = decodeURIComponent(url.pathname);
     if (p.endsWith('/')) p += 'index.html';
