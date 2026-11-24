@@ -4,4 +4,4 @@ dist
 .wrangler
 .worker
 *.zip
-preview-*.png
+preview-*
