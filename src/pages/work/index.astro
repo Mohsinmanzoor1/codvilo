@@ -2,8 +2,12 @@
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { projects, categories } from '../../data/projects.js';
+import { graph, breadcrumbs, SITE } from '../../data/seo.js';
+const title = 'Work & Case Studies: Ecommerce, App and Web Design | Codvilo';
+const description = 'Case studies by Codvilo: Shopify stores, fintech and health app UX, dashboards, agency websites, branding and social media campaigns, with process and results.';
+const jsonld = graph({ '@type': 'CollectionPage', url: `${SITE}/work/`, name: title, description, isPartOf: { '@id': `${SITE}/#website` }, mainEntity: { '@type': 'ItemList', itemListElement: projects.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/work/${p.slug}/`, name: `${p.title}: ${p.subtitle}` })) } }, breadcrumbs([['Home', '/'], ['Work', '/work/']]));
 ---
-<Base title="Work — Codvilo" description="Selected case studies by Codvilo: ecommerce stores, fintech and health apps, websites, branding and social media." path="/work/">
+<Base title={title} description={description} path="/work/" jsonld={jsonld}>
   <section class="whead light" data-theme="light">
     <div class="wrap">
       <p class="tag" data-fade><i class="tag__dots"></i>Selected work · {projects.length} projects</p>
@@ -15,7 +19,7 @@ import { projects, categories } from '../../data/projects.js';
   </section>
   <section class="wlist light" data-theme="light">
     <div class="wrap wlist__grid" data-grid>
-      {projects.map((p, i) => <ProjectCard project={p} wide={i % 4 === 0 || i % 4 === 3} eager={i < 2} />)}
+      {projects.map((p, i) => <ProjectCard project={p} wide={i % 4 === 0 || i % 4 === 3} eager={i < 2} level={2} />)}
     </div>
   </section>
   <section class="cta cta--mini dark" data-theme="dark">

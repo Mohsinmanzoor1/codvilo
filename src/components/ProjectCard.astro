@@ -1,5 +1,6 @@
 ---
-const { project: p, wide = false, eager = false } = Astro.props;
+const { project: p, wide = false, eager = false, level = 3 } = Astro.props;
+const H = `h${level}`;
 ---
 <a class={`pcase${wide ? ' pcase--wide' : ''}`} href={`/work/${p.slug}/`} data-pcase data-cat={p.category}>
   <div class="pcase__media" style={`--theme:${p.theme}`}>
@@ -8,7 +9,7 @@ const { project: p, wide = false, eager = false } = Astro.props;
   </div>
   <div class="pcase__meta">
     <div>
-      <h3>{p.title}</h3>
+      <H>{p.title}</H>
       <p>{p.subtitle}</p>
     </div>
     <span class="mono">{p.year}</span>

@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { projects } from '../../data/projects.js';
+import { graph, breadcrumbs, SITE } from '../../data/seo.js';
 
 export function getStaticPaths() {
   return projects.map((p, i) => ({ params: { slug: p.slug }, props: { p, next: projects[(i + 1) % projects.length] } }));
@@ -8,9 +9,26 @@ export function getStaticPaths() {
 const { p, next } = Astro.props;
 const n = (i) => String(i).padStart(2, '0');
 const gallery = p.images.slice(1);
+const title = `${p.title}: ${p.subtitle} Case Study | Codvilo`;
+const tails = [
+  ` A ${p.category.toLowerCase()} case study by Codvilo: ${p.services.slice(0, 2).join(' and ').toLowerCase()}.`,
+  ` A ${p.category.toLowerCase()} case study by Codvilo.`,
+  ' Case study by Codvilo.',
+];
+const description = p.summary + (tails.find((t) => p.summary.length + t.length <= 160) ?? '');
+const url = `${SITE}/work/${p.slug}/`;
+const jsonld = graph(
+  {
+    '@type': 'CreativeWork', '@id': `${url}#work`, url, name: `${p.title}: ${p.subtitle}`, headline: `${p.title}: ${p.subtitle} case study`,
+    description: p.summary, abstract: p.overview, image: p.images.slice(0, 4).map((i) => i.src), dateCreated: p.year, inLanguage: 'en',
+    genre: p.category, keywords: [p.category, ...p.services, ...p.tools].join(', '),
+    creator: { '@id': `${SITE}/#organization` }, author: { '@id': `${SITE}/#founder` }, publisher: { '@id': `${SITE}/#organization` },
+    sameAs: p.behance, isPartOf: { '@id': `${SITE}/#website` },
+  },
+  breadcrumbs([['Home', '/'], ['Work', '/work/'], [p.title, `/work/${p.slug}/`]]),
+);
 ---
-<Base title={`${p.title} — ${p.subtitle} · Codvilo`} description={p.summary} path={`/work/${p.slug}/`} image={p.cover.src}
-  jsonld={{ '@context': 'https://schema.org', '@type': 'CreativeWork', name: `${p.title} — ${p.subtitle}`, description: p.summary, image: p.cover.src, dateCreated: p.year, creator: { '@type': 'Organization', name: 'Codvilo', founder: { '@type': 'Person', name: 'Mohsin Manzoor' } } }}>
+<Base title={title} description={description} path={`/work/${p.slug}/`} image={p.cover.src} ogType="article" jsonld={jsonld}>
   <article class="case" style={`--theme:${p.theme};--accent-c:${p.accent}`}>
     <header class="case__hero dark" data-theme="dark">
       <div class="wrap">
@@ -34,23 +52,23 @@ const gallery = p.images.slice(1);
     <section class="case__body light" data-theme="light">
       <div class="wrap">
         <div class="crow">
-          <p class="tag" data-fade><i class="tag__dots"></i>Overview</p>
+          <h2 class="tag" data-fade><i class="tag__dots"></i>Overview</h2>
           <p class="crow__lead display" data-fade>{p.overview}</p>
         </div>
 
         <div class="cpair">
           <div class="ccard" data-fade>
-            <p class="tag"><i class="tag__dots"></i>The challenge</p>
+            <h2 class="tag"><i class="tag__dots"></i>The challenge</h2>
             <p>{p.challenge}</p>
           </div>
           <div class="ccard ccard--theme" data-fade>
-            <p class="tag"><i class="tag__dots"></i>The solution</p>
+            <h2 class="tag"><i class="tag__dots"></i>The solution</h2>
             <p>{p.solution}</p>
           </div>
         </div>
 
         <div class="crow">
-          <p class="tag" data-fade><i class="tag__dots"></i>Process</p>
+          <h2 class="tag" data-fade><i class="tag__dots"></i>Process</h2>
           <ol class="csteps">
             {p.process.map((step, i) => <li data-step><span class="mono">{n(i + 1)}</span>{step}</li>)}
           </ol>
@@ -58,7 +76,7 @@ const gallery = p.images.slice(1);
 
         {p.insights.length > 0 && (
           <div class="crow">
-            <p class="tag" data-fade><i class="tag__dots"></i>Research insights</p>
+            <h2 class="tag" data-fade><i class="tag__dots"></i>Research insights</h2>
             <div class="cstats">
               {p.insights.map((it) => <div class="cstat" data-stat><b class="display" data-count={it.value}>{it.value}</b><span>{it.label}</span></div>)}
             </div>
@@ -68,7 +86,7 @@ const gallery = p.images.slice(1);
 
         {p.details.length > 0 && (
           <div class="crow">
-            <p class="tag" data-fade><i class="tag__dots"></i>Design details</p>
+            <h2 class="tag" data-fade><i class="tag__dots"></i>Design details</h2>
             <dl class="cdetails" data-fade>{p.details.map((d) => <div><dt class="mono">{d.label}</dt><dd>{d.value}</dd></div>)}</dl>
           </div>
         )}
@@ -78,7 +96,7 @@ const gallery = p.images.slice(1);
     <section class="case__gallery light" data-theme="light">
       <div class="wrap">
         <div class="cgal__head">
-          <p class="tag" data-fade><i class="tag__dots"></i>The full case study</p>
+          <h2 class="tag" data-fade><i class="tag__dots"></i>The full case study</h2>
           <a class="btn btn--primary" href={p.behance} target="_blank" rel="noopener">View on Behance <svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg></a>
         </div>
         <div class="cgal">
@@ -95,7 +113,7 @@ const gallery = p.images.slice(1);
       <a class="wrap cnext__link" href={`/work/${next.slug}/`}>
         <span class="mono cnext__label">Next project</span>
         <span class="display cnext__title">{next.title} <span class="tone">{next.subtitle}</span></span>
-        <span class="cnext__img"><img src={next.cover.src} width={next.cover.w} height={next.cover.h} alt="" loading="lazy" /></span>
+        <span class="cnext__img"><img src={next.cover.src} width={next.cover.w} height={next.cover.h} alt={`${next.title}: ${next.subtitle}`} loading="lazy" /></span>
       </a>
     </section>
   </article>

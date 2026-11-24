@@ -1,6 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import '../styles/contact.css';
+import { graph, breadcrumbs, SITE } from '../data/seo.js';
+const title = 'Contact Codvilo: Start Your Ecommerce or Web Project';
+const description = 'Tell Codvilo about your project. Shopify stores, websites, branding, social media and ads for brands worldwide. Mohsin replies personally to every message.';
+const jsonld = graph({ '@type': 'ContactPage', url: `${SITE}/contact/`, name: title, description, isPartOf: { '@id': `${SITE}/#website` }, about: { '@id': `${SITE}/#organization` } }, breadcrumbs([['Home', '/'], ['Contact', '/contact/']]));
 
 const email = 'hello.codvilo@gmail.com';
 const services = ['Ecommerce store', 'Social media', 'Web design & development', 'Brand identity', 'Paid advertising', 'SEO & content'];
@@ -13,7 +17,7 @@ const steps = [
 ];
 const check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
 ---
-<Base title="Contact — Codvilo" description="Tell us about your project. Ecommerce, social media, brand and web: one team, from idea to launch." path="/contact/">
+<Base title={title} description={description} path="/contact/" jsonld={jsonld}>
   <section class="ct dark" data-theme="dark">
     <div class="ct__glow" aria-hidden="true"></div>
     <div class="wrap">

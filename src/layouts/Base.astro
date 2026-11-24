@@ -4,6 +4,7 @@ import '@fontsource-variable/geist-mono/wght.css';
 import '@fontsource-variable/inter/wght.css';
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
+import { graph, OG_IMAGE } from '../data/seo.js';
 
 interface Props {
   title: string;
@@ -12,8 +13,10 @@ interface Props {
   image?: string;
   home?: boolean;
   jsonld?: object;
+  noindex?: boolean;
+  ogType?: string;
 }
-const { title, description, path = '/', image, home = false, jsonld } = Astro.props;
+const { title, description, path = '/', image = OG_IMAGE, home = false, jsonld, noindex = false, ogType = 'website' } = Astro.props;
 const email = 'hello.codvilo@gmail.com';
 const p = home ? '' : '/';
 const nav = [
@@ -37,21 +40,24 @@ const url = `https://codvilo.com${path}`;
     <link rel="canonical" href={url} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#0A0A0A" />
-    <meta property="og:type" content="website" />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+    <meta name="author" content="Mohsin Manzoor" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-friendly summary of Codvilo" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <meta property="og:site_name" content="Codvilo" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
-    {image && <meta property="og:image" content={image} />}
-    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
     <link rel="preconnect" href="https://mir-s3-cdn-cf.behance.net" crossorigin />
-    <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? {
-      '@context': 'https://schema.org',
-      '@type': 'ProfessionalService',
-      name: 'Codvilo',
-      url: 'https://codvilo.com',
-      founder: { '@type': 'Person', name: 'Mohsin Manzoor' },
-      description,
-    })} />
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? graph())} />}
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>

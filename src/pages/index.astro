@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { graph, faqPage, FAQ } from '../data/seo.js';
 import Logo from '../components/Logo.astro';
 import FeaturedWork from '../components/FeaturedWork.astro';
 import ServicesBento from '../components/ServicesBento.astro';
@@ -54,12 +55,12 @@ const platforms = [
 
 const icon = (s) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${s.path}"/></svg>`;
 
-const title = 'Codvilo — Ecommerce, Social Media & Web Agency';
+const title = 'Codvilo: Ecommerce, Shopify, Social Media & Web Agency';
 const description =
-  'Codvilo is a digital agency founded by Mohsin Manzoor. Ecommerce solutions, social media, web design, branding, paid ads and SEO for brands that want to grow.';
+  'Codvilo designs and builds Shopify and WooCommerce stores, websites and brand identities, and runs social media, paid ads and SEO. One team, brands worldwide.';
 ---
 
-<Base title={title} description={description} home>
+<Base title={title} description={description} home jsonld={graph({ '@type': 'WebPage', '@id': 'https://codvilo.com/#webpage', url: 'https://codvilo.com/', name: title, description, isPartOf: { '@id': 'https://codvilo.com/#website' }, about: { '@id': 'https://codvilo.com/#organization' } }, faqPage)}>
       <!-- HERO -->
       <section class="hero" data-theme="dark">
         <div class="hero__glow" aria-hidden="true"></div>
@@ -187,6 +188,25 @@ const description =
 
       <!-- ABOUT (studio) -->
       <AboutStudio />
+
+      <!-- FAQ -->
+      <section class="faq section light" id="faq" data-theme="light">
+        <div class="wrap faq__grid">
+          <div class="faq__head">
+            <p class="tag" data-fade><i class="tag__dots"></i>FAQ</p>
+            <h2 class="display h2" data-split>Questions, <span class="tone">answered.</span></h2>
+            <p class="faq__lede" data-fade>Can’t find what you need? <a href="/contact/">Send us a message</a> and Mohsin will reply personally.</p>
+          </div>
+          <div class="faq__list" data-fade>
+            {FAQ.map((f, i) => (
+              <details class="faq__item" open={i === 0}>
+                <summary><h3>{f.q}</h3><span class="faq__icon" aria-hidden="true"></span></summary>
+                <div class="faq__a"><p>{f.a}</p></div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <!-- CTA -->
       <section class="cta dark" id="contact" data-theme="dark">
