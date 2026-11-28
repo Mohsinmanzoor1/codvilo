@@ -1,3 +1,4 @@
+import './deal.js';
 // Script for inner pages (work listing and case studies).
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

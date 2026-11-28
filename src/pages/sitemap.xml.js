@@ -1,6 +1,7 @@
 // /sitemap.xml: every indexable page, with case-study images for Google Images.
 import { projects } from '../data/projects.js';
 import { SITE } from '../data/seo.js';
+import { services } from '../data/services.js';
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -9,6 +10,9 @@ export function GET() {
   const pages = [
     { loc: '/', priority: '1.0', freq: 'weekly' },
     { loc: '/work/', priority: '0.9', freq: 'weekly' },
+    { loc: '/services/', priority: '0.9', freq: 'monthly' },
+    ...services.map((s) => ({ loc: `/services/${s.slug}/`, priority: s.offer ? '0.9' : '0.8', freq: 'weekly' })),
+    { loc: '/free-store-audit/', priority: '0.8', freq: 'monthly' },
     { loc: '/contact/', priority: '0.8', freq: 'monthly' },
     ...projects.map((p) => ({ loc: `/work/${p.slug}/`, priority: '0.7', freq: 'monthly', images: p.images.slice(0, 6).map((i, k) => ({ src: i.src, title: k === 0 ? `${p.title}: ${p.subtitle}` : `${p.title} case study image ${k + 1}` })) })),
   ];

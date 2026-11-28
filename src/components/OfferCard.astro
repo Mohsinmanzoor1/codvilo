@@ -1,0 +1,30 @@
+---
+// Shopify package card. Shows the deal price until SHOPIFY_OFFER.deal.endsAt,
+// then the regular price (also switched client-side by src/scripts/deal.js).
+import { SHOPIFY_OFFER as O, dealActive } from '../data/services.js';
+const live = dealActive();
+const ARR = '<svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>';
+const check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+---
+<div class={`offer${live ? ' is-deal' : ''}`} data-deal-scope data-ends={O.deal.endsAt}>
+  <div class="offer__top">
+    <p class="offer__badge" data-deal-only><span class="offer__pulse"></span>{O.deal.label} · ends in <b data-countdown>soon</b></p>
+    <h3 class="display offer__name">{O.name}</h3>
+    <div class="offer__price">
+      <b class="display" data-deal-only>${O.deal.price}</b>
+      <s data-deal-only>${O.regularPrice}</s>
+      <b class="display" data-regular-only>${O.regularPrice}</b>
+      <span>one-time · USD</span>
+    </div>
+    <p class="offer__save" data-deal-only>Save ${O.regularPrice - O.deal.price}. Book before the deal ends; we start in order of booking.</p>
+    <p class="offer__time">Delivered in {O.delivery}</p>
+    <a class="btn btn--primary btn--lg offer__cta" href="/contact/?service=shopify-deal">
+      <span data-deal-only>Claim the ${O.deal.price} deal</span><span data-regular-only>Start your store</span>
+      <Fragment set:html={ARR} />
+    </a>
+  </div>
+  <ul class="offer__list">
+    {O.includes.map((x) => <li><i set:html={check} />{x}</li>)}
+  </ul>
+  <p class="offer__note">{O.excludes}</p>
+</div>

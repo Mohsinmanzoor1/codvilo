@@ -37,6 +37,32 @@ const count = $('[data-count]');
 const updateCount = () => { count.textContent = `${msg.value.length} / 5000`; };
 msg.addEventListener('input', updateCount);
 
+// Arriving from a service page or the deal: pre-select the service and add a starter message.
+const PRESETS = {
+  'shopify-deal': { chips: ['Ecommerce store'], budget: 'Under $1k', offer: 'shopify-deal', note: 'Black Friday deal: complete Shopify store for $499 (regular $799)', msg: 'Hi, I’d like the Black Friday Shopify store deal ($499). My store sells: ' },
+  'shopify-development': { chips: ['Ecommerce store'], msg: 'Hi, I need a Shopify store. ' },
+  'woocommerce-development': { chips: ['Ecommerce store'], msg: 'Hi, I need help with a WooCommerce store. ' },
+  'social-media-management': { chips: ['Social media'] },
+  'website-design': { chips: ['Web design & development'] },
+  'branding': { chips: ['Brand identity'] },
+  'paid-ads': { chips: ['Paid advertising'] },
+};
+const preset = PRESETS[new URLSearchParams(location.search).get('service')];
+let offer = '';
+if (preset) {
+  const press = (group, v) => { const b = $(`[data-chips="${group}"] .chip[data-value="${v}"]`); if (b) b.setAttribute('aria-pressed', 'true'); };
+  (preset.chips || []).forEach((v) => press('services', v));
+  if (preset.budget) press('budget', preset.budget);
+  if (preset.msg && !msg.value) { msg.value = preset.msg; updateCount(); }
+  if (preset.offer && document.documentElement.classList.contains('deal-live')) {
+    offer = preset.offer;
+    const note = document.createElement('p');
+    note.className = 'ct-offer';
+    note.textContent = preset.note;
+    form.prepend(note);
+  }
+}
+
 // Validation.
 const setErr = (name, text) => {
   const err = $(`[data-err="${name}"]`);
@@ -64,7 +90,7 @@ form.addEventListener('submit', async (e) => {
   const d = {
     name: form.elements.name.value, email: form.elements.email.value, company: form.elements.company.value,
     message: form.elements.message.value, website: form.elements.website.value,
-    services: chips.services(), budget: chips.budget()[0] || '', timeline: chips.timeline()[0] || '', elapsed: Date.now() - started,
+    services: chips.services(), budget: chips.budget()[0] || '', timeline: chips.timeline()[0] || '', elapsed: Date.now() - started, offer,
   };
   const errs = validate(d);
   ['name', 'email', 'message'].forEach((n) => setErr(n, errs[n]));

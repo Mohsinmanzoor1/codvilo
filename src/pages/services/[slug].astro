@@ -1,0 +1,166 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import OfferCard from '../../components/OfferCard.astro';
+import { services, SHOPIFY_OFFER, dealActive } from '../../data/services.js';
+import { projects } from '../../data/projects.js';
+import { graph, breadcrumbs, SITE } from '../../data/seo.js';
+import '../../styles/services.css';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props;
+const url = `${SITE}/services/${s.slug}/`;
+const related = s.projects.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
+const others = services.filter((x) => x.slug !== s.slug);
+const live = dealActive();
+const ARR = '<svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>';
+const check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+
+const O = SHOPIFY_OFFER;
+const offerLd = s.offer ? {
+  '@type': 'Offer', url: `${url}#pricing`, priceCurrency: O.currency,
+  price: live ? O.deal.price : O.regularPrice,
+  ...(live ? { priceValidUntil: O.deal.endsAt.slice(0, 10) } : {}),
+  priceSpecification: { '@type': 'UnitPriceSpecification', price: O.regularPrice, priceCurrency: O.currency, priceType: 'https://schema.org/ListPrice' },
+  availability: 'https://schema.org/InStock', seller: { '@id': `${SITE}/#organization` },
+} : undefined;
+const jsonld = graph(
+  {
+    '@type': 'Service', '@id': `${url}#service`, url, name: s.title, serviceType: s.title, description: s.description,
+    provider: { '@id': `${SITE}/#organization` }, areaServed: { '@type': 'Place', name: 'Worldwide' },
+    ...(offerLd ? { offers: offerLd } : {}),
+  },
+  { '@type': 'FAQPage', mainEntity: s.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+  breadcrumbs([['Home', '/'], ['Services', '/services/'], [s.nav, `/services/${s.slug}/`]]),
+);
+---
+<Base title={s.seoTitle} description={s.description} path={`/services/${s.slug}/`} jsonld={jsonld}>
+  <section class="svc-hero dark" data-theme="dark">
+    <div class="svc-hero__glow" aria-hidden="true"></div>
+    <div class="wrap">
+      <nav class="crumbs mono" aria-label="Breadcrumb" data-fade><a href="/">Home</a><span>/</span><a href="/services/">Services</a><span>/</span><span>{s.nav}</span></nav>
+      <p class="tag tag--dark" data-fade><i class="tag__dots"></i>{s.eyebrow}</p>
+      <h1 class="display svc-hero__title" data-split set:html={s.h1} />
+      <p class="svc-hero__lede" data-fade>{s.lede}</p>
+      <div class="hero__cta svc-hero__cta" data-fade>
+        {s.offer ? (
+          <a class="btn btn--primary btn--lg" href="#pricing" data-deal-scope data-ends={O.deal.endsAt}>
+            <span data-deal-only>Get a store for ${O.deal.price}</span><span data-regular-only>See pricing</span> <Fragment set:html={ARR} />
+          </a>
+        ) : (
+          <a class="btn btn--primary btn--lg" href={`/contact/?service=${s.slug}`}>Start a project <Fragment set:html={ARR} /></a>
+        )}
+        <a class="btn btn--secondary btn--lg" href={s.slug.includes('shopify') || s.slug.includes('woocommerce') ? '/free-store-audit/' : '/work/'}>
+          {s.slug.includes('shopify') || s.slug.includes('woocommerce') ? 'Get a free store audit' : 'See our work'}
+        </a>
+      </div>
+      {s.offer && live && <p class="svc-hero__deal mono" data-fade data-deal-scope data-ends={O.deal.endsAt} data-deal-only>{O.deal.label}: <s>${O.regularPrice}</s> ${O.deal.price} · ends in <b data-countdown>soon</b></p>}
+    </div>
+  </section>
+
+  <section class="section light" data-theme="light">
+    <div class="wrap svc-intro">
+      <div>
+        <h2 class="tag" data-fade><i class="tag__dots"></i>Who it’s for</h2>
+        <ul class="svc-for" data-fade>{s.for.map((x) => <li><i set:html={check} />{x}</li>)}</ul>
+      </div>
+      <div>
+        <h2 class="display h2 svc-h2" data-split>What you get</h2>
+        <div class="svc-features">
+          {s.features.map((f, i) => (
+            <article class="svc-feature" data-fade>
+              <span class="mono">0{i + 1}</span>
+              <h3>{f.t}</h3>
+              <p>{f.d}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {s.offer && (
+    <section class="section dark svc-pricing" id="pricing" data-theme="dark">
+      <div class="wrap svc-pricing__grid">
+        <div>
+          <p class="tag tag--dark" data-fade><i class="tag__dots"></i>Pricing</p>
+          <h2 class="display h2" data-split>One price. <span class="tone">A complete store.</span></h2>
+          <p class="svc-pricing__lede" data-fade>Everything you need to start selling, at a fixed price with no surprises. You own the store and every file.</p>
+          <a class="svc-pricing__link" href="/free-store-audit/" data-fade>Already have a store? Get a free audit →</a>
+        </div>
+        <div data-fade><OfferCard /></div>
+      </div>
+    </section>
+  )}
+
+  <section class="section light" data-theme="light">
+    <div class="wrap">
+      <p class="tag" data-fade><i class="tag__dots"></i>How it works</p>
+      <h2 class="display h2" data-split>Simple, <span class="tone">start to finish.</span></h2>
+      <ol class="svc-steps">
+        {s.process.map((p, i) => (
+          <li data-fade><span class="mono">0{i + 1}</span><h3>{p.t}</h3><p>{p.d}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="section light svc-work" data-theme="light">
+      <div class="wrap">
+        <div class="fw__head">
+          <div>
+            <p class="tag" data-fade><i class="tag__dots"></i>Related work</p>
+            <h2 class="display h2" data-split>Recent <span class="tone">projects.</span></h2>
+          </div>
+          <a class="btn btn--primary" href="/work/" data-fade>See all work <Fragment set:html={ARR} /></a>
+        </div>
+        <div class="wlist__grid">{related.map((p) => <ProjectCard project={p} level={3} />)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="faq section light" data-theme="light">
+    <div class="wrap faq__grid">
+      <div class="faq__head">
+        <p class="tag" data-fade><i class="tag__dots"></i>FAQ</p>
+        <h2 class="display h2" data-split>Questions, <span class="tone">answered.</span></h2>
+        <p class="faq__lede" data-fade>Something else? <a href={`/contact/?service=${s.offer ? 'shopify-deal' : s.slug}`}>Ask us directly</a>.</p>
+      </div>
+      <div class="faq__list" data-fade>
+        {s.faq.map((f, i) => (
+          <details class="faq__item" open={i === 0}>
+            <summary><h3>{f.q}</h3><span class="faq__icon" aria-hidden="true"></span></summary>
+            <div class="faq__a"><p>{f.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section light svc-more" data-theme="light">
+    <div class="wrap">
+      <p class="tag" data-fade><i class="tag__dots"></i>More services</p>
+      <ul class="svc-more__list">
+        {others.map((o) => <li><a href={`/services/${o.slug}/`}><span>{o.nav}</span><Fragment set:html={ARR} /></a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta cta--mini dark" data-theme="dark">
+    <div class="wrap cta__inner">
+      <p class="tag tag--dark" data-fade><i class="tag__dots"></i>Next step</p>
+      <h2 class="display cta__title" data-split>Ready to start? <span class="tone">Let’s talk.</span></h2>
+      <div class="hero__cta" data-fade>
+        <a class="btn btn--primary btn--lg" href={`/contact/?service=${s.offer ? 'shopify-deal' : s.slug}`}>Start a project <Fragment set:html={ARR} /></a>
+        <a class="btn btn--secondary btn--lg" href="/work/">See our work</a>
+      </div>
+    </div>
+  </section>
+  <script>
+    import '../../scripts/sub.js';
+    import '../../scripts/deal.js';
+  </script>
+</Base>

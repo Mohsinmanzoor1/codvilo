@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import { services, SHOPIFY_OFFER as O, dealActive } from '../../data/services.js';
+import { graph, breadcrumbs, SITE } from '../../data/seo.js';
+import '../../styles/services.css';
+
+const title = 'Services: Shopify, Websites, Social Media, Branding & Ads | Codvilo';
+const description = 'Codvilo services: Shopify and WooCommerce stores, website design, social media management, brand identity and paid ads. One team for brands worldwide.';
+const live = dealActive();
+const ARR = '<svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>';
+const jsonld = graph(
+  { '@type': 'CollectionPage', url: `${SITE}/services/`, name: title, description, isPartOf: { '@id': `${SITE}/#website` },
+    mainEntity: { '@type': 'ItemList', itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/services/${s.slug}/`, name: s.title })) } },
+  breadcrumbs([['Home', '/'], ['Services', '/services/']]),
+);
+---
+<Base title={title} description={description} path="/services/" jsonld={jsonld}>
+  <section class="svc-hero dark" data-theme="dark">
+    <div class="svc-hero__glow" aria-hidden="true"></div>
+    <div class="wrap">
+      <p class="tag tag--dark" data-fade><i class="tag__dots"></i>Services</p>
+      <h1 class="display svc-hero__title" data-split>Everything your brand needs <span class="tone">to grow online.</span></h1>
+      <p class="svc-hero__lede" data-fade>Stores, websites, brands, content and ads, designed and built by one team, so everything works together.</p>
+    </div>
+  </section>
+  <section class="section light" data-theme="light">
+    <div class="wrap svc-index">
+      {services.map((s, i) => (
+        <a class="svc-tile" href={`/services/${s.slug}/`} data-fade>
+          <span class="mono">0{i + 1}</span>
+          <h2 class="display">{s.title}</h2>
+          <p>{s.description.replace(/ By Codvilo\.$/, '').replace(/^Codvilo designs and builds /, 'We design and build ')}</p>
+          {s.offer && live && <span class="svc-tile__deal mono" data-deal-scope data-ends={O.deal.endsAt} data-deal-only>{O.deal.label}: ${O.deal.price} <s>${O.regularPrice}</s></span>}
+          <span class="svc-tile__go">Learn more <Fragment set:html={ARR} /></span>
+        </a>
+      ))}
+    </div>
+  </section>
+  <section class="cta cta--mini dark" data-theme="dark">
+    <div class="wrap cta__inner">
+      <p class="tag tag--dark" data-fade><i class="tag__dots"></i>Not sure where to start?</p>
+      <h2 class="display cta__title" data-split>Get a free <span class="tone">store audit.</span></h2>
+      <div class="hero__cta" data-fade>
+        <a class="btn btn--primary btn--lg" href="/free-store-audit/">Get my free audit <Fragment set:html={ARR} /></a>
+        <a class="btn btn--secondary btn--lg" href="/contact/">Contact us</a>
+      </div>
+    </div>
+  </section>
+  <script>
+    import '../../scripts/sub.js';
+    import '../../scripts/deal.js';
+  </script>
+</Base>

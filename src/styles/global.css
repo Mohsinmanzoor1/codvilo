@@ -853,3 +853,30 @@ h2.tag { font-weight: 400; }
 .faq__item[open] .faq__a p { animation: faqIn 0.5s var(--ease); }
 @keyframes faqIn { from { opacity: 0; transform: translateY(-6px); } }
 @media (max-width: 900px) { .faq__grid { grid-template-columns: 1fr; } .faq__head { position: static; } .faq__a p { padding-right: 0; } }
+
+/* ===== Deal pill (site-wide, dismissible) ===== */
+.deal-pill {
+  position: fixed; left: 50%; bottom: 18px; z-index: 65; display: flex; align-items: center; gap: 4px;
+  padding: 6px 6px 6px 8px; border-radius: 99px; background: rgba(12, 11, 20, 0.88); border: 1px solid rgba(107, 92, 255, 0.5);
+  box-shadow: 0 18px 40px -14px rgba(60, 40, 180, 0.6); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  color: #f3f2ee; translate: -50% 140%; opacity: 0; transition: translate 0.8s var(--ease), opacity 0.5s;
+}
+.deal-pill.is-in { translate: -50% 0; opacity: 1; }
+.deal-pill.is-gone { translate: -50% 140%; opacity: 0; }
+.deal-pill__link { display: flex; align-items: center; gap: 12px; padding-right: 6px; white-space: nowrap; }
+.deal-pill__tag { padding: 6px 10px; border-radius: 99px; background: #6b5cff; color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+.deal-pill__text { font-size: 14.5px; }
+.deal-pill__text b { font-weight: 600; color: #c7beff; }
+.deal-pill__text s { color: #8d8b86; margin-left: 2px; }
+.deal-pill__time { font-size: 11.5px; color: #a5a39d; text-transform: uppercase; }
+.deal-pill__time b { color: #fff; font-weight: 500; font-variant-numeric: tabular-nums; }
+.deal-pill__link:hover .deal-pill__text { text-decoration: underline; text-underline-offset: 3px; }
+.deal-pill__x { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; text-align: center; color: #a5a39d; font-size: 18px; line-height: 1; transition: background-color 0.3s, color 0.3s; }
+.deal-pill__x:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.deal-over .deal-pill { display: none; }
+@media (max-width: 640px) {
+  .deal-pill { left: 12px; right: 12px; translate: 0 140%; bottom: 12px; border-radius: 16px; }
+  .deal-pill.is-in { translate: 0 0; }
+  .deal-pill__link { flex-wrap: wrap; gap: 4px 10px; white-space: normal; padding: 4px 4px 4px 2px; }
+  .deal-pill__time { width: 100%; }
+}

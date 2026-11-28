@@ -1,7 +1,9 @@
 // /llms.txt: a plain-language summary of Codvilo for AI assistants
 // (format: https://llmstxt.org). /llms-full.txt has every case study in full.
 import { projects } from '../data/projects.js';
-import { SITE, EMAIL, BEHANCE, SERVICES, FAQ } from '../data/seo.js';
+import { SITE, EMAIL, BEHANCE, FAQ } from '../data/seo.js';
+import { services, SHOPIFY_OFFER as O, dealActive } from '../data/services.js';
+const usd = (n) => 'US$' + n;
 
 export function GET() {
   const body = `# Codvilo
@@ -15,7 +17,13 @@ export function GET() {
 
 ## Services
 
-${SERVICES.map((s) => `- **${s.name}**: ${s.text}`).join('\n')}
+${services.map((s) => `- [${s.title}](${SITE}/services/${s.slug}/): ${s.description.replace(/ By Codvilo\.$/, '')}`).join('\n')}
+- [Free ecommerce store audit](${SITE}/free-store-audit/): a free, personal review of a Shopify or WooCommerce store with quick wins.
+
+## Pricing
+
+- Complete Shopify store: ${usd(O.regularPrice)} (one-time).${dealActive() ? ` ${O.deal.label}: ${usd(O.deal.price)} until ${O.deal.endsAt.slice(0, 10)}.` : ''} Includes custom design on a premium theme, up to 25 products, core and policy pages, payments, shipping and taxes, essential apps, basic SEO, analytics, a handover video and 14 days of support. Delivery in ${O.delivery}. Shopify plan and paid theme or app fees are separate.
+- Other services are quoted per project after a short call.
 
 ## How a project works
 

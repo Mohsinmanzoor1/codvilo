@@ -9,6 +9,9 @@ const ALLOWED_ORIGINS = ['https://codvilo.com', 'https://www.codvilo.com', 'http
 const SERVICES = ['Ecommerce store', 'Social media', 'Web design & development', 'Brand identity', 'Paid advertising', 'SEO & content'];
 const BUDGETS = ['Under $1k', '$1k–3k', '$3k–10k', '$10k+', 'Not sure yet'];
 const TIMELINES = ['As soon as possible', 'Within 1–3 months', 'Flexible'];
+const PLATFORMS = ['Shopify', 'WooCommerce', 'Other / not sure'];
+const PROBLEMS = ['Not enough sales', 'Slow store', 'Looks outdated', 'Checkout drop-offs', 'Poor mobile experience', 'Low traffic'];
+const OFFERS = { 'shopify-deal': 'Black Friday: complete Shopify store ($499)' };
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 const clean = (v, max) => (typeof v === 'string' ? v.replace(/\r/g, '').trim().slice(0, max) : '');
@@ -38,25 +41,34 @@ export async function handleContact(request, env) {
   const services = Array.isArray(d.services) ? d.services.filter((s) => SERVICES.includes(s)).slice(0, 6) : [];
   const budget = BUDGETS.includes(d.budget) ? d.budget : '';
   const timeline = TIMELINES.includes(d.timeline) ? d.timeline : '';
+  const isAudit = d.kind === 'audit';
+  const storeUrl = oneLine(clean(d.storeUrl, 200));
+  const platform = PLATFORMS.includes(d.platform) ? d.platform : '';
+  const problems = Array.isArray(d.problems) ? d.problems.filter((p) => PROBLEMS.includes(p)).slice(0, 6) : [];
+  const offer = OFFERS[d.offer] || '';
 
   const errors = {};
   if (name.length < 2) errors.name = 'Please enter your name.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) errors.email = 'Please enter a valid email address.';
-  if (message.length < 10) errors.message = 'Tell us a little more (at least 10 characters).';
+  if (isAudit) { if (!/^(https?:\/\/)?[^\s.]+\.[^\s]{2,}$/i.test(storeUrl)) errors.storeUrl = 'Please enter your store address, e.g. yourstore.com'; }
+  else if (message.length < 10) errors.message = 'Tell us a little more (at least 10 characters).';
   if (Object.keys(errors).length) return json({ ok: false, errors }, 422);
 
   if (!env.CONTACT) return json({ ok: false, error: 'Email is not configured yet.' }, 503);
 
-  const rows = [['Name', name], ['Email', email], ['Company / brand', company || '—'], ['Services', services.join(', ') || '—'], ['Budget', budget || '—'], ['Timeline', timeline || '—']];
-  const text = `New project enquiry from codvilo.com\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nMessage:\n${message}\n\n— Reply to this email to answer ${name} directly.`;
+  const rows = isAudit
+    ? [['Store', storeUrl], ['Platform', platform || '—'], ['Problems', problems.join(', ') || '—'], ['Name', name], ['Email', email]]
+    : [...(offer ? [['Offer', offer]] : []), ['Name', name], ['Email', email], ['Company / brand', company || '—'], ['Services', services.join(', ') || '—'], ['Budget', budget || '—'], ['Timeline', timeline || '—']];
+  const heading = isAudit ? 'Free store audit request' : offer ? 'Black Friday deal enquiry' : 'New project enquiry';
+  const text = `${heading} from codvilo.com\n\n${rows.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nMessage:\n${message || '(none)'}\n\n— Reply to this email to answer ${name} directly.`;
   const html = `<!doctype html><html><body style="margin:0;background:#f4f3f8;font-family:Inter,Arial,sans-serif;color:#0a0a0a">
 <div style="max-width:560px;margin:0 auto;padding:28px 20px">
-<p style="margin:0 0 6px;font:12px/1 monospace;letter-spacing:.08em;text-transform:uppercase;color:#6b5cff">New project enquiry</p>
+<p style="margin:0 0 6px;font:12px/1 monospace;letter-spacing:.08em;text-transform:uppercase;color:#6b5cff">${heading}</p>
 <h1 style="margin:0 0 20px;font-size:22px;font-weight:600">${esc(name)}${company ? ` · ${esc(company)}` : ''}</h1>
 <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:14px">
 ${rows.map(([k, v]) => `<tr><td style="padding:10px 14px;border-bottom:1px solid #eee;color:#6f6e69;width:38%">${k}</td><td style="padding:10px 14px;border-bottom:1px solid #eee">${k === 'Email' ? `<a href="mailto:${esc(v)}" style="color:#6b5cff">${esc(v)}</a>` : esc(v)}</td></tr>`).join('')}
 </table>
-<div style="margin-top:16px;background:#fff;border-radius:12px;padding:16px 14px;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(message)}</div>
+<div style="margin-top:16px;background:#fff;border-radius:12px;padding:16px 14px;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(message || '(no extra message)')}</div>
 <p style="margin:16px 0 0;font-size:12px;color:#8d8b86">Sent from the contact form on codvilo.com. Reply to this email to answer ${esc(name)} directly.</p>
 </div></body></html>`;
 
@@ -65,7 +77,7 @@ ${rows.map(([k, v]) => `<tr><td style="padding:10px 14px;border-bottom:1px solid
     `From: ${encHeader('Codvilo Website')} <${FROM}>`,
     `To: <${TO}>`,
     `Reply-To: ${encHeader(name)} <${email}>`,
-    `Subject: ${encHeader(`New enquiry: ${name}${company ? ` (${company})` : ''}`)}`,
+    `Subject: ${encHeader(isAudit ? `Audit request: ${storeUrl} (${name})` : offer ? `Black Friday deal: ${name}${company ? ` (${company})` : ''}` : `New enquiry: ${name}${company ? ` (${company})` : ''}`)}`,
     `Date: ${new Date().toUTCString()}`,
     `Message-ID: <${crypto.randomUUID()}@codvilo.com>`,
     'MIME-Version: 1.0',

@@ -5,6 +5,7 @@ import '@fontsource-variable/inter/wght.css';
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import { graph, OG_IMAGE } from '../data/seo.js';
+import { dealActive, SHOPIFY_OFFER } from '../data/services.js';
 
 interface Props {
   title: string;
@@ -21,17 +22,17 @@ const email = 'hello.codvilo@gmail.com';
 const p = home ? '' : '/';
 const nav = [
   { label: 'Work', href: home ? '#work' : '/work/' },
-  { label: 'Services', href: `${p}#services` },
+  { label: 'Services', href: '/services/' },
   { label: 'Process', href: `${p}#process` },
   { label: 'Platforms', href: `${p}#platforms` },
   { label: 'About', href: `${p}#about` },
 ];
-const services = ['Ecommerce solutions', 'Social media', 'Web design & development', 'Brand identity', 'Paid advertising', 'SEO & content'];
+const footerServices = [['Shopify stores', '/services/shopify-development/'], ['WooCommerce stores', '/services/woocommerce-development/'], ['Website design', '/services/website-design/'], ['Social media', '/services/social-media-management/'], ['Brand identity', '/services/branding/'], ['Paid advertising', '/services/paid-ads/'], ['Free store audit', '/free-store-audit/']];
 const url = `https://codvilo.com${path}`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class={dealActive() ? 'deal-live' : 'deal-over'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -59,6 +60,9 @@ const url = `https://codvilo.com${path}`;
     <link rel="preconnect" href="https://mir-s3-cdn-cf.behance.net" crossorigin />
     {!noindex && <script type="application/ld+json" set:html={JSON.stringify(jsonld ?? graph())} />}
     <script is:inline>document.documentElement.classList.add('js');</script>
+    <script is:inline define:vars={{ dealEnds: SHOPIFY_OFFER.deal.endsAt }}>
+      if (Date.now() > new Date(dealEnds).getTime()) { document.documentElement.classList.remove('deal-live'); document.documentElement.classList.add('deal-over'); }
+    </script>
   </head>
   <body>
     <header class="nav" data-nav>
@@ -79,6 +83,16 @@ const url = `https://codvilo.com${path}`;
       <a class="menu__mail" href={`mailto:${email}`}>{email}</a>
     </div>
 
+    {dealActive() && !Astro.url.pathname.startsWith('/services/shopify') && (
+      <aside class="deal-pill" data-deal-banner data-ends={SHOPIFY_OFFER.deal.endsAt} aria-label="Black Friday offer">
+        <a href="/services/shopify-development/#pricing" class="deal-pill__link">
+          <span class="deal-pill__tag mono">{SHOPIFY_OFFER.deal.label}</span>
+          <span class="deal-pill__text">Complete Shopify store <b>${SHOPIFY_OFFER.deal.price}</b> <s>${SHOPIFY_OFFER.regularPrice}</s></span>
+          <span class="deal-pill__time mono">Ends in <b data-countdown>soon</b></span>
+        </a>
+        <button class="deal-pill__x" type="button" aria-label="Dismiss offer" data-deal-close>×</button>
+      </aside>
+    )}
     <main id="top">
       <slot />
     </main>
@@ -96,7 +110,7 @@ const url = `https://codvilo.com${path}`;
         </div>
         <div class="footer__col">
           <p class="mono">Services</p>
-          {services.map((s) => <a href={`${p}#services`}>{s}</a>)}
+          {footerServices.map(([s, h]) => <a href={h}>{s}</a>)}
         </div>
         <div class="footer__col">
           <p class="mono">Contact</p>
